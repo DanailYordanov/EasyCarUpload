@@ -12,21 +12,22 @@ class CarsBgClass():
         self.load_cookies()
 
     def login(self):
-        self.browser.get(
-            "https://www.cars.bg/loginpage.php?ref=https://www.cars.bg/carslist.php?open_menu=1")
-        time.sleep(1)
-
         phone_number = config('CARS_PHONE_NUMBER')
         password = config('CARS_PASSWORD')
 
-        input = self.browser.find_element_by_xpath('//*[@id="phone"]')
-        input.send_keys(phone_number)
+        self.browser.get(
+            "https://www.cars.bg/loginpage.php?ref=https://www.cars.bg/carslist.php?open_menu=1")
 
         time.sleep(1)
 
-        input = self.browser.find_element_by_xpath(
+        phone_input = self.browser.find_element_by_xpath('//*[@id="phone"]')
+        phone_input.send_keys(phone_number)
+
+        time.sleep(1)
+
+        password_input = self.browser.find_element_by_xpath(
             '//*[@id="private_login_conteiner"]/div[1]/div[2]/div/input')
-        input.send_keys(password)
+        password_input.send_keys(password)
 
         time.sleep(1)
 
@@ -59,6 +60,7 @@ class CarsBgClass():
 
     def open_publish_page(self):
         self.browser.get("https://www.cars.bg/publish.php")
+
         time.sleep(0.5)
 
         element = self.browser.find_element_by_xpath(
@@ -326,26 +328,26 @@ class CarsBgClass():
 
         time.sleep(0.5)
 
-        # # Upload images
+        # Upload images
 
-        # paths = [
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
-        #     'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
-        # ]
+        paths = [
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
+            'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
+        ]
 
-        # i = 1
-        # for path in paths:
-        #     image_input = self.browser.find_element_by_id(
-        #         'uploadFile' + str(i))
-        #     image_input.send_keys(path)
-        #     i += 1
-        #     time.sleep(3)
+        i = 1
+        for path in paths:
+            image_input = self.browser.find_element_by_id(
+                'uploadFile' + str(i))
+            image_input.send_keys(path)
+            i += 1
+            time.sleep(3)
 
-        # time.sleep(0.5)
+        time.sleep(0.5)
 
         # Click publish button
 
