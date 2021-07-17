@@ -61,13 +61,13 @@ class CarsBgClass():
     def open_publish_page(self):
         self.browser.get("https://www.cars.bg/publish.php")
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         element = self.browser.find_element_by_xpath(
             '//*[@id="mainForm"]/ul/li/a')
         element.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         element = self.browser.find_element_by_xpath(
             '//*[@id="main-content"]/div/ul/li[2]/label')
@@ -85,7 +85,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[5]')
         element.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         brands = self.browser.find_elements_by_tag_name('label')
         for brand in brands:
@@ -97,7 +97,7 @@ class CarsBgClass():
 
                 brand.click()
 
-                time.sleep(0.5)
+                time.sleep(1)
 
                 i = 2
                 while True:
@@ -110,26 +110,26 @@ class CarsBgClass():
                         print(models.text)
                         i += 1
 
-                time.sleep(0.5)
+                time.sleep(1)
 
                 # Closes brand's models page
                 self.browser.execute_script(
                     "$('.close-paged-select-publish').trigger('vclick')")
 
-                time.sleep(0.5)
+                time.sleep(1)
 
                 element = self.browser.find_element_by_xpath(
                     '//*[@id="mainForm"]/ul/li[5]')
                 element.click()
 
-                time.sleep(0.5)
+                time.sleep(1)
 
     def choose_condition(self):
         condition_page = self.browser.find_element_by_xpath(
             '//*[@id="conditionwrapper"]')
         condition_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         condition = self.browser.find_element_by_xpath(
             "//label[text()='В добро състояние']")
@@ -140,7 +140,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[7]')
         category_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         category = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -151,7 +151,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[5]')
         brands_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         brand = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -175,7 +175,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[10]')
         gear_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         gears = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -186,7 +186,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[11]')
         fuel_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         fuel = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -205,13 +205,13 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[14]')
         year_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         year = self.browser.find_element_by_xpath(
             f"//label[text()='{year_choice}']")
         year.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         month = self.browser.find_element_by_xpath(
             f"//label[text()='{month_choice}']")
@@ -226,7 +226,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[16]')
         doors_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         doors = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -237,13 +237,13 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[17]')
         colors_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         color = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
         color.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         self.browser.execute_script('closePublishSubPage($(this));')
 
@@ -252,7 +252,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[19]')
         location_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         location = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -268,7 +268,7 @@ class CarsBgClass():
             '//*[@id="mainForm"]/ul/li[18]')
         euro_page.click()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         euro = self.browser.find_element_by_xpath(
             f"//label[text()='{choice}']")
@@ -290,113 +290,113 @@ class CarsBgClass():
     def add(self):
         self.open_publish_page()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose condition
 
         self.choose_condition()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose category
 
         self.choose_category('Седан')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose brand and model
 
         self.choose_brand('BMW')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         self.choose_model('335')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input engine type
 
         self.input_engine_type('335I N54')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input price
 
         self.input_price('15000')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose gear type
 
         self.choose_gear_type('Автоматични')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose fuel type
 
         self.choose_fuel_type('Бензин')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input power
 
         self.input_power('306')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input cubature
 
         self.input_cubature('3000')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose year and month
 
         self.choose_year_and_month('2012', 'Декември')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input run
 
         self.input_run('130000')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose doors type
 
         self.choose_doors_type('2/3')
 
-        time.sleep(0.5)
+        time.sleep(2)
 
         # Choose color
 
         self.choose_color('Сив')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose location
 
         self.choose_location('в България')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose usage
 
         self.choose_usage()
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Choose euro
 
         self.choose_euro_type('EURO 4')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Input description
 
         self.input_description('Колата е перфектна')
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Upload images
 
@@ -411,13 +411,27 @@ class CarsBgClass():
 
         self.upload_images(paths)
 
-        time.sleep(0.5)
+        time.sleep(1)
 
         # Click publish button
 
         button = self.browser.find_element_by_id('publishBtn')
         button.click()
 
+    def delete(self, offer_id):
+
+        self.browser.get(
+            f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
+
+        time.sleep(3)
+
+        self.browser.execute_script(
+            '$("[data-action=openDeleteoffer]").click()')
+
+        time.sleep(1)
+
+        self.browser.execute_script(
+            '$("[data-action=deleteofferCloseYes]").click()')
+
 
 instance = CarsBgClass()
-instance.add()
