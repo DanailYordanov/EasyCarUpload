@@ -264,19 +264,21 @@ class CarsBgClass():
         usage.click()
 
     def choose_euro_type(self, choice):
-        euro_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[18]')
-        euro_page.click()
+        if choice:
+            euro_page = self.browser.find_element_by_xpath(
+                '//*[@id="mainForm"]/ul/li[18]')
+            euro_page.click()
 
-        time.sleep(1)
+            time.sleep(1)
 
-        euro = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        euro.click()
+            euro = self.browser.find_element_by_xpath(
+                f"//label[text()='{choice}']")
+            euro.click()
 
     def input_description(self, input):
-        description = self.browser.find_element_by_id('notes')
-        description.send_keys(input)
+        if input:
+            description = self.browser.find_element_by_id('notes')
+            description.send_keys(input)
 
     def upload_images(self, paths):
         i = 1
@@ -287,7 +289,10 @@ class CarsBgClass():
             i += 1
             time.sleep(3)
 
-    def add(self):
+    def add(self, category, brand, model, engine_type, price,
+            gear_type, fuel_type, power, cubature, year, month, run,
+            doors_type, color, euro_type, description, image_paths):
+
         self.open_publish_page()
 
         time.sleep(1)
@@ -300,77 +305,77 @@ class CarsBgClass():
 
         # Choose category
 
-        self.choose_category('Седан')
+        self.choose_category(category)
 
         time.sleep(1)
 
         # Choose brand and model
 
-        self.choose_brand('BMW')
+        self.choose_brand(brand)
 
         time.sleep(1)
 
-        self.choose_model('335')
+        self.choose_model(model)
 
         time.sleep(1)
 
         # Input engine type
 
-        self.input_engine_type('335I N54')
+        self.input_engine_type(engine_type)
 
         time.sleep(1)
 
         # Input price
 
-        self.input_price('15000')
+        self.input_price(price)
 
         time.sleep(1)
 
         # Choose gear type
 
-        self.choose_gear_type('Автоматични')
+        self.choose_gear_type(gear_type)
 
         time.sleep(1)
 
         # Choose fuel type
 
-        self.choose_fuel_type('Бензин')
+        self.choose_fuel_type(fuel_type)
 
         time.sleep(1)
 
         # Input power
 
-        self.input_power('306')
+        self.input_power(power)
 
         time.sleep(1)
 
         # Input cubature
 
-        self.input_cubature('3000')
+        self.input_cubature(cubature)
 
         time.sleep(1)
 
         # Choose year and month
 
-        self.choose_year_and_month('2012', 'Декември')
+        self.choose_year_and_month(year, month)
 
         time.sleep(1)
 
         # Input run
 
-        self.input_run('130000')
+        self.input_run(run)
 
         time.sleep(1)
 
         # Choose doors type
 
-        self.choose_doors_type('2/3')
+        self.choose_doors_type(doors_type)
 
-        time.sleep(2)
+        time.sleep(1)
 
         # Choose color
 
-        self.choose_color('Сив')
+        self.choose_color(color)
 
         time.sleep(1)
 
@@ -388,28 +393,19 @@ class CarsBgClass():
 
         # Choose euro
 
-        self.choose_euro_type('EURO 4')
+        self.choose_euro_type(euro_type)
 
         time.sleep(1)
 
         # Input description
 
-        self.input_description('Колата е перфектна')
+        self.input_description(description)
 
         time.sleep(1)
 
         # Upload images
 
-        paths = [
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
-            'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
-        ]
-
-        self.upload_images(paths)
+        self.upload_images(image_paths)
 
         time.sleep(1)
 
@@ -423,7 +419,7 @@ class CarsBgClass():
         self.browser.get(
             f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
 
-        time.sleep(3)
+        time.sleep(5)
 
         self.browser.execute_script(
             '$("[data-action=openDeleteoffer]").click()')
@@ -434,4 +430,15 @@ class CarsBgClass():
             '$("[data-action=deleteofferCloseYes]").click()')
 
 
+paths = [
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
+]
+
 instance = CarsBgClass()
+instance.add('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
+             '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
