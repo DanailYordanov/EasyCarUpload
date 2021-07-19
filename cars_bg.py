@@ -12,8 +12,8 @@ class CarsBgClass():
         self.load_cookies()
 
     def login(self):
-        phone_number = config('CARS_PHONE_NUMBER')
-        password = config('CARS_PASSWORD')
+        phone_number = config('CARS_BG_PHONE_NUMBER')
+        password = config('CARS_BG_PASSWORD')
 
         self.browser.get(
             "https://www.cars.bg/loginpage.php?ref=https://www.cars.bg/carslist.php?open_menu=1")
@@ -37,12 +37,13 @@ class CarsBgClass():
 
         time.sleep(1)
 
-        pickle.dump(self.browser.get_cookies(), open("cookies.pkl", "wb"))
+        pickle.dump(self.browser.get_cookies(),
+                    open("cars_bg_cookies.pkl", "wb"))
 
     def load_cookies(self):
         try:
             self.browser.get("https://www.cars.bg/")
-            cookies = pickle.load(open("cookies.pkl", "rb"))
+            cookies = pickle.load(open("cars_bg_cookies.pkl", "rb"))
 
             for cookie in cookies:
                 self.browser.add_cookie(cookie)
@@ -52,8 +53,6 @@ class CarsBgClass():
             self.browser.refresh()
 
             time.sleep(1)
-
-            self.browser.find_element_by_class_name('mdc-drawer__subtitle')
 
         except Exception:
             self.login()

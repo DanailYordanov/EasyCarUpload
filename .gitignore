@@ -1,3 +1,4 @@
 .env
 chromedriver.exe
-cookies.pkl
+cars_bg_cookies.pkl
+auto_bg_cookies.pkl
