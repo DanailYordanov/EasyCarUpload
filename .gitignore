@@ -3,3 +3,5 @@ chromedriver.exe
 cars_bg_cookies.pkl
 auto_bg_cookies.pkl
 automoto_bg_cookies.pkl
+geckodriver.exe
+geckodriver.log

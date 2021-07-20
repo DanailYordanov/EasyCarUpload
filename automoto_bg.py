@@ -8,7 +8,7 @@ import pickle
 class AutomotoBg():
 
     def __init__(self):
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
         self.load_cookies()
 
     def login(self):
@@ -68,7 +68,7 @@ class AutomotoBg():
 
         self.browser.get('https://automoto.bg/listings/create')
 
-        time.sleep(5)
+        time.sleep(3)
 
         brand_select = Select(self.browser.find_element_by_name('mark_id'))
         brand_select.select_by_visible_text(brand)
@@ -146,20 +146,33 @@ class AutomotoBg():
 
         time.sleep(1)
 
-        description_input = self.browser.find_element_by_name('description')
+        description_input = self.browser.find_element_by_id('description')
         description_input.send_keys(description)
 
         time.sleep(1)
 
-        for path in image_paths:
-            image_input = self.browser.find_element_by_xpath(
-                '//input[@type="file"]')
-            image_input.send_keys(path)
-            time.sleep(2)
+        # When you join all paths with \n you can pass them to the input at once
+        multiple_images_path = '\n'.join(image_paths)
+        image_input = self.browser.find_element_by_xpath(
+            '//input[@type="file"]')
+        image_input.send_keys(multiple_images_path)
+
+        time.sleep(2)
+
+        button = self.browser.find_element_by_xpath(
+            '//*[@id="ID-listingOnlyCarCreate"]/div[24]/div/button')
+        button.click()
 
 
-paths = []
+paths = [
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
+    'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
+]
 
 instance = AutomotoBg()
 instance.add('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
-             '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
+             '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', 'Колата е перфектна', paths)
