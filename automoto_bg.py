@@ -61,7 +61,7 @@ class AutomotoBg():
             pickle.dump(self.browser.get_cookies(),
                         open('automoto_bg_cookies.pkl', 'wb'))
         except BaseException as e:
-            print(f'Something went wrong while logging you in! - {e}')
+            print(f'Something went wrong while logging you in ! - {e}')
 
     def load_cookies(self):
         try:
@@ -81,8 +81,8 @@ class AutomotoBg():
                 EC.element_to_be_clickable((By.NAME, 'mark_id')))
             brand_select = Select(brand_select)
             brand_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a brand!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a brand ! - {e}')
 
     def choose_model(self, choice):
         try:
@@ -90,16 +90,17 @@ class AutomotoBg():
                 EC.element_to_be_clickable((By.NAME, 'model_id')))
             model_select = Select(model_select)
             model_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a model!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a model ! - {e}')
 
     def input_modification(self, input):
         try:
             modification_input = self.browser.find_element_by_name(
                 'modification')
             modification_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting a modification!')
+        except BaseException as e:
+            print(
+                f'Something went wrong while inputting a modification ! - {e}')
 
     def choose_category(self, choice):
         try:
@@ -107,15 +108,15 @@ class AutomotoBg():
                 EC.element_to_be_clickable((By.NAME, 'coupe_id')))
             category_select = Select(category_select)
             category_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a category!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a category ! - {e}')
 
     def input_price(self, input):
         try:
             price_input = self.browser.find_element_by_name('price')
             price_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting a price!')
+        except BaseException as e:
+            print(f'Something went wrong while inputting a price ! - {e}')
 
     def choose_transmission_type(self, choice):
         try:
@@ -124,8 +125,9 @@ class AutomotoBg():
             transmission_type_select = Select(
                 self.browser.find_element_by_name('speed_id'))
             transmission_type_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a transmission type!')
+        except BaseException as e:
+            print(
+                f'Something went wrong while choosing a transmission type! - {e}')
 
     def choose_fuel_type(self, choice):
         try:
@@ -134,22 +136,22 @@ class AutomotoBg():
             fuel_type_select = Select(
                 self.browser.find_element_by_name('fuel_id'))
             fuel_type_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a fuel type!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a fuel type ! - {e}')
 
     def input_power(self, input):
         try:
             power_input = self.browser.find_element_by_name('power')
             power_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting power!')
+        except BaseException as e:
+            print(f'Something went wrong while inputting power ! - {e}')
 
     def input_displacement(self, input):
         try:
             displacement_input = self.browser.find_element_by_name('cubic')
             displacement_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting displacement!')
+        except BaseException as e:
+            print(f'Something went wrong while inputting displacement ! - {e}')
 
     def choose_month(self, choice):
         try:
@@ -158,8 +160,8 @@ class AutomotoBg():
             month_select = Select(
                 self.browser.find_element_by_name('month_id'))
             month_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a month!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a month ! - {e}')
 
     def choose_year(self, choice):
         try:
@@ -167,15 +169,15 @@ class AutomotoBg():
                 EC.element_to_be_clickable((By.NAME, 'year_id')))
             year_select = Select(self.browser.find_element_by_name('year_id'))
             year_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a year!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a year ! - {e}')
 
     def input_run(self, input):
         try:
             run_input = self.browser.find_element_by_name('mileage')
             run_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting run!')
+        except BaseException as e:
+            print(f'Something went wrong while inputting run ! - {e}')
 
     def choose_doors_type(self, choice):
         try:
@@ -184,8 +186,8 @@ class AutomotoBg():
             doors_type_select = Select(
                 self.browser.find_element_by_name('door_id'))
             doors_type_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a doors type!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a doors type ! - {e}')
 
     def choose_color(self, choice):
         try:
@@ -194,8 +196,8 @@ class AutomotoBg():
             color_select = Select(
                 self.browser.find_element_by_name('color_id'))
             color_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a color!')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a color ! - {e}')
 
     def choose_euro_standart(self, choice):
         try:
@@ -204,15 +206,17 @@ class AutomotoBg():
             euro_standart_select = Select(
                 self.browser.find_element_by_name('euro_standart_id'))
             euro_standart_select.select_by_visible_text(choice)
-        except:
-            print('Something went wrong while choosing a EURO standart!')
+        except BaseException as e:
+            print(
+                f'Something went wrong while choosing a EURO standart ! - {e}')
 
     def input_description(self, input):
         try:
             description_input = self.browser.find_element_by_id('description')
             description_input.send_keys(input)
-        except:
-            print('Something went wrong while inputting a description!')
+        except BaseException as e:
+            print(
+                f'Something went wrong while inputting a description ! - {e}')
 
     def upload_images(self, paths):
         try:
@@ -221,8 +225,8 @@ class AutomotoBg():
             image_input = self.browser.find_element_by_xpath(
                 '//input[@type="file"]')
             image_input.send_keys(multiple_images_path)
-        except:
-            print('Something went wrong while uploading images!')
+        except BaseException as e:
+            print(f'Something went wrong while uploading images ! - {e}')
 
     def add(self, category, brand, model, modification, price,
             transmission_type, fuel_type, power, displacement, year, month, run,
