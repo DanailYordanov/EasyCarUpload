@@ -1,416 +1,351 @@
-from selenium.common.exceptions import NoSuchElementException
-from selenium import webdriver
-from decouple import config
+import os
 import time
 import pickle
+from decouple import config
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
+
+class images_uploaded():
+    """An expectation for checking that all images are uploaded"""
+
+    def __init__(self, locator, images_number):
+        self.locator = locator
+        self.images_number = images_number
+
+    def __call__(self, driver):
+        element = driver.find_element(*self.locator)
+        images = element.find_elements_by_class_name('haspic')
+        if len(images) == self.images_number:
+            return element
+        else:
+            return False
 
 
 class CarsBgClass():
 
     def __init__(self):
-        self.browser = webdriver.Chrome()
+        self.browser = webdriver.Firefox()
+        self.browser.implicitly_wait(30)
         self.load_cookies()
 
     def login(self):
-        phone_number = config('CARS_BG_PHONE_NUMBER')
-        password = config('CARS_BG_PASSWORD')
 
         self.browser.get(
-            "https://www.cars.bg/loginpage.php?ref=https://www.cars.bg/carslist.php?open_menu=1")
+            'https://www.cars.bg/loginpage.php?ref=https://www.cars.bg/carslist.php?open_menu=1')
 
-        time.sleep(1)
+        try:
+            phone_number = config('CARS_BG_PHONE_NUMBER')
+            password = config('CARS_BG_PASSWORD')
 
-        phone_input = self.browser.find_element_by_xpath('//*[@id="phone"]')
-        phone_input.send_keys(phone_number)
+            phone_input = WebDriverWait(self.browser, 30).until(
+                EC.visibility_of_element_located((By.NAME, 'phone')))
+            phone_input.send_keys(phone_number)
 
-        time.sleep(1)
+            password_input = WebDriverWait(self.browser, 30).until(
+                EC.visibility_of_element_located((By.NAME, 'password_private')))
+            password_input.send_keys(password)
 
-        password_input = self.browser.find_element_by_xpath(
-            '//*[@id="private_login_conteiner"]/div[1]/div[2]/div/input')
-        password_input.send_keys(password)
+            button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="private_login_conteiner"]/div[3]/button/div')))
+            button.click()
 
-        time.sleep(1)
+            time.sleep(5)
 
-        element = self.browser.find_element_by_xpath(
-            '//*[@id="private_login_conteiner"]/div[3]/button/div')
-        element.click()
-
-        time.sleep(1)
-
-        pickle.dump(self.browser.get_cookies(),
-                    open("cars_bg_cookies.pkl", "wb"))
+            pickle.dump(self.browser.get_cookies(),
+                        open("cars_bg_cookies.pkl", "wb"))
+        except BaseException as e:
+            print(f'Something went wrong while logging you in! - {e}')
 
     def load_cookies(self):
         try:
-            self.browser.get("https://www.cars.bg/")
-            cookies = pickle.load(open("cars_bg_cookies.pkl", "rb"))
+            self.browser.get('https://www.cars.bg/')
+            cookies = pickle.load(open('cars_bg_cookies.pkl', 'rb'))
 
             for cookie in cookies:
                 self.browser.add_cookie(cookie)
 
-            time.sleep(1)
-
             self.browser.refresh()
-
-            time.sleep(1)
-
         except Exception:
             self.login()
 
     def open_publish_page(self):
-        self.browser.get("https://www.cars.bg/publish.php")
+        self.browser.get('https://www.cars.bg/publish.php')
 
-        time.sleep(1)
-
-        element = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li/a')
+        element = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="mainForm"]/ul/li/a')))
         element.click()
 
-        time.sleep(1)
-
-        element = self.browser.find_element_by_xpath(
-            '//*[@id="main-content"]/div/ul/li[2]/label')
+        element = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//*[@id="main-content"]/div/ul/li[2]/label')))
         element.click()
 
-        time.sleep(1)
-
-        self.browser.execute_script(
-            'closePublishSubPage($(this));toggleCondition(2);')
-
-    def export_brands(self):
-        self.open_publish_page()
-
-        element = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[5]')
+        element = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '/html/body/div[7]/main/div/form/ul/li[2]/label')))
         element.click()
-
-        time.sleep(1)
-
-        brands = self.browser.find_elements_by_tag_name('label')
-        for brand in brands:
-            if(brand.text != ''):
-
-                print('=================================')
-                print(brand.text)
-                print('=================================')
-
-                brand.click()
-
-                time.sleep(1)
-
-                i = 2
-                while True:
-                    try:
-                        models = self.browser.find_element_by_xpath(
-                            f'//*[@id="modelsconteiner"]/ul/li[{i}]')
-                    except NoSuchElementException:
-                        break
-                    else:
-                        print(models.text)
-                        i += 1
-
-                time.sleep(1)
-
-                # Closes brand's models page
-                self.browser.execute_script(
-                    "$('.close-paged-select-publish').trigger('vclick')")
-
-                time.sleep(1)
-
-                element = self.browser.find_element_by_xpath(
-                    '//*[@id="mainForm"]/ul/li[5]')
-                element.click()
-
-                time.sleep(1)
 
     def choose_condition(self):
-        condition_page = self.browser.find_element_by_xpath(
-            '//*[@id="conditionwrapper"]')
-        condition_page.click()
+        try:
+            condition_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="conditionSelectPage"]')))
+            condition_page.click()
 
-        time.sleep(1)
-
-        condition = self.browser.find_element_by_xpath(
-            "//label[text()='В добро състояние']")
-        condition.click()
+            condition_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, "//label[text()='В добро състояние']")))
+            condition_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing condition ! - {e}')
 
     def choose_category(self, choice):
-        category_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[7]')
-        category_page.click()
+        try:
+            category_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="categorySelectPage"]')))
+            category_page.click()
 
-        time.sleep(1)
-
-        category = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        category.click()
+            category_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            category_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a category ! - {e}')
 
     def choose_brand(self, choice):
-        brands_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[5]')
-        brands_page.click()
+        try:
+            brands_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="brandSelectPage"]')))
+            brands_page.click()
 
-        time.sleep(1)
-
-        brand = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        brand.click()
+            brand_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            brand_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a brand ! - {e}')
 
     def choose_model(self, choice):
-        model = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        model.click()
+        try:
+            model_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            model_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a model ! - {e}')
 
-    def input_engine_type(self, input):
-        engine_input = self.browser.find_element_by_id('engine')
-        engine_input.send_keys(input)
+    def input_modification(self, input):
+        if input:
+            try:
+                modification_input = self.browser.find_element_by_id('engine')
+                modification_input.send_keys(input)
+            except BaseException as e:
+                print(
+                    f'Something went wrong while inputting a modification ! - {e}')
 
     def input_price(self, input):
-        price_input = self.browser.find_element_by_id('price')
-        price_input.send_keys(input)
+        try:
+            price_input = self.browser.find_element_by_id('price')
+            price_input.send_keys(input)
+        except BaseException as e:
+            print(f'Something went wrong while inputting a price ! - {e}')
 
-    def choose_gear_type(self, choice):
-        gear_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[10]')
-        gear_page.click()
+    def choose_transmission_type(self, choice):
+        try:
+            transmission_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="gearSelectPage"]')))
+            transmission_page.click()
 
-        time.sleep(1)
-
-        gears = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        gears.click()
+            transmission_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            transmission_choice.click()
+        except BaseException as e:
+            print(
+                f'Something went wrong while choosing a transmission type ! - {e}')
 
     def choose_fuel_type(self, choice):
-        fuel_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[11]')
-        fuel_page.click()
+        try:
+            fuel_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="fuelSelectPage"]')))
+            fuel_page.click()
 
-        time.sleep(1)
-
-        fuel = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        fuel.click()
+            fuel_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            fuel_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a fuel type ! - {e}')
 
     def input_power(self, input):
-        power_input = self.browser.find_element_by_id('power')
-        power_input.send_keys(input)
+        if input:
+            try:
+                power_input = self.browser.find_element_by_id('power')
+                power_input.send_keys(input)
+            except BaseException as e:
+                print(f'Something went wrong while inputting power ! - {e}')
 
-    def input_cubature(self, input):
-        cubature_input = self.browser.find_element_by_id('cubature')
-        cubature_input.send_keys(input)
+    def input_displacement(self, input):
+        if input:
+            try:
+                cubature_input = self.browser.find_element_by_id('cubature')
+                cubature_input.send_keys(input)
+            except BaseException as e:
+                print(
+                    f'Something went wrong while inputting displacement ! - {e}')
 
     def choose_year_and_month(self, year_choice, month_choice):
-        year_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[14]')
-        year_page.click()
+        try:
+            year_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="yearSelectPage"]')))
+            year_page.click()
 
-        time.sleep(1)
+            year_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{year_choice}']")))
+            year_choice.click()
 
-        year = self.browser.find_element_by_xpath(
-            f"//label[text()='{year_choice}']")
-        year.click()
-
-        time.sleep(1)
-
-        month = self.browser.find_element_by_xpath(
-            f"//label[text()='{month_choice}']")
-        month.click()
+            month_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{month_choice}']")))
+            month_choice.click()
+        except BaseException as e:
+            print(
+                f'Something went wrong while choosing an year and a month ! - {e}')
 
     def input_run(self, input):
-        run_input = self.browser.find_element_by_id('run')
-        run_input.send_keys(input)
+        try:
+            run_input = self.browser.find_element_by_id('run')
+            run_input.send_keys(input)
+        except BaseException as e:
+            print(f'Something went wrong while inputting run ! - {e}')
 
     def choose_doors_type(self, choice):
-        doors_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[16]')
-        doors_page.click()
+        try:
+            doors_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="doorsSelectPage"]')))
+            doors_page.click()
 
-        time.sleep(1)
-
-        doors = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        doors.click()
+            doors_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            doors_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a doors type ! - {e}')
 
     def choose_color(self, choice):
-        colors_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[17]')
-        colors_page.click()
+        try:
+            colors_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="colorSelectPage"]')))
+            colors_page.click()
 
-        time.sleep(1)
+            color_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            color_choice.click()
 
-        color = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        color.click()
+            back_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div[17]/header/div/section[1]/button')))
+            back_button.click()
 
-        time.sleep(1)
-
-        self.browser.execute_script('closePublishSubPage($(this));')
+        except BaseException as e:
+            print(f'Something went wrong while choosing a color ! - {e}')
 
     def choose_location(self, choice):
-        location_page = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[19]')
-        location_page.click()
+        try:
+            location_page = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="isbgSelectPage"]')))
+            location_page.click()
 
-        time.sleep(1)
-
-        location = self.browser.find_element_by_xpath(
-            f"//label[text()='{choice}']")
-        location.click()
+            location_choice = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+            location_choice.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing a location ! - {e}')
 
     def choose_usage(self):
-        usage = self.browser.find_element_by_xpath(
-            '//*[@id="mainForm"]/ul/li[20]/label')
-        usage.click()
+        try:
+            usage = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//label[@for="usageId"]')))
+            usage.click()
+        except BaseException as e:
+            print(f'Something went wrong while choosing usage ! - {e}')
 
-    def choose_euro_type(self, choice):
+    def choose_euro_standart(self, choice):
         if choice:
-            euro_page = self.browser.find_element_by_xpath(
-                '//*[@id="mainForm"]/ul/li[18]')
-            euro_page.click()
+            try:
+                euro_standart_page = WebDriverWait(self.browser, 30).until(
+                    EC.element_to_be_clickable((By.XPATH, '//a[@sync-data="euroSelectPage"]')))
+                euro_standart_page.click()
 
-            time.sleep(1)
-
-            euro = self.browser.find_element_by_xpath(
-                f"//label[text()='{choice}']")
-            euro.click()
+                euro_standart_choice = WebDriverWait(self.browser, 30).until(
+                    EC.element_to_be_clickable((By.XPATH, f"//label[text()='{choice}']")))
+                euro_standart_choice.click()
+            except BaseException as e:
+                print(
+                    f'Something went wrong while choosing a EURO standart ! - {e}')
 
     def input_description(self, input):
         if input:
-            description = self.browser.find_element_by_id('notes')
-            description.send_keys(input)
+            try:
+                description = self.browser.find_element_by_id('notes')
+                description.send_keys(input)
+            except BaseException as e:
+                print(
+                    f'Something went wrong while inputting a description ! - {e}')
 
     def upload_images(self, paths):
-        i = 1
-        for path in paths:
-            image_input = self.browser.find_element_by_id(
-                'uploadFile' + str(i))
-            image_input.send_keys(path)
-            i += 1
-            time.sleep(3)
+        try:
+            # When you join all paths with \n you can pass them to the input at once
 
-    def add(self, category, brand, model, engine_type, price,
-            gear_type, fuel_type, power, cubature, year, month, run,
-            doors_type, color, euro_type, description, image_paths):
+            multiple_images_path = '\n'.join(paths)
+            image_input = self.browser.find_element_by_xpath(
+                '//input[@type="file"]')
+            image_input.send_keys(multiple_images_path)
+
+            # Wait for the images to upload
+
+            WebDriverWait(self.browser, 30).until(
+                images_uploaded((By.ID, 'sortable'), len(paths)))
+        except BaseException as e:
+            print(f'Something went wrong while uploading images ! - {e}')
+
+    def add(self, category, brand, model, modification, price,
+            transmission_type, fuel_type, power, displacement, year, month, run,
+            doors_type, color, euro_standart, description, image_paths):
 
         self.open_publish_page()
 
-        time.sleep(1)
-
-        # Choose condition
-
         self.choose_condition()
-
-        time.sleep(1)
-
-        # Choose category
-
-        self.choose_category(category)
-
-        time.sleep(1)
-
-        # Choose brand and model
 
         self.choose_brand(brand)
 
-        time.sleep(1)
-
         self.choose_model(model)
 
-        time.sleep(1)
+        self.input_modification(modification)
 
-        # Input engine type
-
-        self.input_engine_type(engine_type)
-
-        time.sleep(1)
-
-        # Input price
+        self.choose_category(category)
 
         self.input_price(price)
 
-        time.sleep(1)
-
-        # Choose gear type
-
-        self.choose_gear_type(gear_type)
-
-        time.sleep(1)
-
-        # Choose fuel type
+        self.choose_transmission_type(transmission_type)
 
         self.choose_fuel_type(fuel_type)
 
-        time.sleep(1)
-
-        # Input power
-
         self.input_power(power)
 
-        time.sleep(1)
-
-        # Input cubature
-
-        self.input_cubature(cubature)
-
-        time.sleep(1)
-
-        # Choose year and month
+        self.input_displacement(displacement)
 
         self.choose_year_and_month(year, month)
 
-        time.sleep(1)
-
-        # Input run
-
         self.input_run(run)
-
-        time.sleep(1)
-
-        # Choose doors type
 
         self.choose_doors_type(doors_type)
 
-        time.sleep(1)
-
-        # Choose color
-
         self.choose_color(color)
 
-        time.sleep(1)
-
-        # Choose location
+        self.choose_euro_standart(euro_standart)
 
         self.choose_location('в България')
 
-        time.sleep(1)
-
-        # Choose usage
-
         self.choose_usage()
-
-        time.sleep(1)
-
-        # Choose euro
-
-        self.choose_euro_type(euro_type)
-
-        time.sleep(1)
-
-        # Input description
 
         self.input_description(description)
 
-        time.sleep(1)
-
-        # Upload images
-
         self.upload_images(image_paths)
 
-        time.sleep(1)
-
-        # Click publish button
-
-        button = self.browser.find_element_by_id('publishBtn')
+        button = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.ID, 'publishBtn')))
         button.click()
 
     def delete(self, offer_id):
@@ -418,24 +353,24 @@ class CarsBgClass():
         self.browser.get(
             f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
 
-        time.sleep(5)
+        delete_button = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//button[@data-action="openDeleteoffer"]')))
+        delete_button.click()
 
-        self.browser.execute_script(
-            '$("[data-action=openDeleteoffer]").click()')
+        confirm_delete_button = WebDriverWait(self.browser, 30).until(
+            EC.element_to_be_clickable((By.XPATH, '//a[@data-action="deleteofferCloseYes"]')))
+        confirm_delete_button.click()
 
-        time.sleep(1)
 
-        self.browser.execute_script(
-            '$("[data-action=deleteofferCloseYes]").click()')
-
+BASE_DIR = os.path.dirname(__file__)
 
 paths = [
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic1.jpg',
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic2.jpg',
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic3.jpg',
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic4.jpg',
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic5.jpg',
-    'E:\Coding\CarsUpload\CarsUpload\pics\pic6.jpg'
+    os.path.join(BASE_DIR, '..\pics\pic1.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic2.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic3.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic4.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic5.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic6.jpg')
 ]
 
 instance = CarsBgClass()
