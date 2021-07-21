@@ -221,10 +221,16 @@ class AutomotoBg():
     def upload_images(self, paths):
         try:
             # When you join all paths with \n you can pass them to the input at once
+
             multiple_images_path = '\n'.join(paths)
             image_input = self.browser.find_element_by_xpath(
                 '//input[@type="file"]')
             image_input.send_keys(multiple_images_path)
+
+            # Wait for the images to upload
+
+            WebDriverWait(self.browser, 30).until(
+                images_uploaded((By.ID, 'images'), len(paths)))
         except BaseException as e:
             print(f'Something went wrong while uploading images ! - {e}')
 
@@ -268,9 +274,6 @@ class AutomotoBg():
 
         self.upload_images(image_paths)
 
-        WebDriverWait(self.browser, 30).until(
-            images_uploaded((By.ID, 'images'), len(image_paths)))
-
         button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//*[@id="ID-listingOnlyCarCreate"]/div[24]/div/button')))
         button.click()
@@ -284,12 +287,7 @@ paths = [
     os.path.join(BASE_DIR, '..\pics\pic3.jpg'),
     os.path.join(BASE_DIR, '..\pics\pic4.jpg'),
     os.path.join(BASE_DIR, '..\pics\pic5.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic6.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic7.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic8.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic9.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic10.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic11.jpg'),
+    os.path.join(BASE_DIR, '..\pics\pic6.jpg')
 ]
 
 instance = AutomotoBg()
