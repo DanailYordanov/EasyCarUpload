@@ -278,6 +278,10 @@ class AutomotoBg():
             EC.element_to_be_clickable((By.XPATH, '//*[@id="ID-listingOnlyCarCreate"]/div[24]/div/button')))
         button.click()
 
+    def delete(self, offer_id):
+        self.browser.get(
+            f'https://automoto.bg/profile/delete-listing/{offer_id}')
+
 
 BASE_DIR = os.path.dirname(__file__)
 
