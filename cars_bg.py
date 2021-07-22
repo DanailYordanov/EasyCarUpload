@@ -1,5 +1,4 @@
 import os
-import time
 import pickle
 from decouple import config
 from selenium import webdriver
@@ -52,7 +51,8 @@ class CarsBgClass():
                 EC.element_to_be_clickable((By.XPATH, '//*[@id="private_login_conteiner"]/div[3]/button/div')))
             button.click()
 
-            time.sleep(5)
+            WebDriverWait(self.browser, 30).until(
+                EC.presence_of_element_located((By.XPATH, '//a[@href="https://www.cars.bg/logout.php"]')))
 
             pickle.dump(self.browser.get_cookies(),
                         open("cars_bg_cookies.pkl", "wb"))
@@ -374,5 +374,5 @@ paths = [
 ]
 
 instance = CarsBgClass()
-instance.publish('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
-                 '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
+# instance.publish('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
+#                  '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
