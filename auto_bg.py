@@ -59,7 +59,7 @@ class AutoBgClass():
         pickle.dump(self.browser.get_cookies(),
                     open("auto_bg_cookies.pkl", "wb"))
 
-    def add(self):
+    def publish(self):
 
         self.browser.get('https://www.auto.bg/newoffer')
 
@@ -172,4 +172,4 @@ class AutoBgClass():
 
 
 instance = AutoBgClass()
-instance.add()
+instance.publish()

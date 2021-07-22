@@ -300,9 +300,9 @@ class CarsBgClass():
         except BaseException as e:
             print(f'Something went wrong while uploading images ! - {e}')
 
-    def add(self, category, brand, model, modification, price,
-            transmission_type, fuel_type, power, displacement, year, month, run,
-            doors_type, color, euro_standart, description, image_paths):
+    def publish(self, category, brand, model, modification, price,
+                transmission_type, fuel_type, power, displacement, year, month, run,
+                doors_type, color, euro_standart, description, image_paths):
 
         self.open_publish_page()
 
@@ -374,5 +374,5 @@ paths = [
 ]
 
 instance = CarsBgClass()
-instance.add('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
-             '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
+instance.publish('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
+                 '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)
