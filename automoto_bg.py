@@ -50,11 +50,9 @@ class AutomotoBg():
             password_input = self.browser.find_element_by_name('password')
             password_input.send_keys(password)
 
-            WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="content"]/div/div/div[2]/section/form/div[2]/label/button')))
-
-            self.browser.execute_script(
-                """$('button[type="submit"]').click();""")
+            button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[@type="submit"]')))
+            button.click()
 
             time.sleep(5)
 
@@ -122,8 +120,7 @@ class AutomotoBg():
         try:
             transmission_type_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'speed_id')))
-            transmission_type_select = Select(
-                self.browser.find_element_by_name('speed_id'))
+            transmission_type_select = Select(transmission_type_select)
             transmission_type_select.select_by_visible_text(choice)
         except BaseException as e:
             print(
@@ -133,8 +130,7 @@ class AutomotoBg():
         try:
             fuel_type_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'fuel_id')))
-            fuel_type_select = Select(
-                self.browser.find_element_by_name('fuel_id'))
+            fuel_type_select = Select(fuel_type_select)
             fuel_type_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a fuel type ! - {e}')
@@ -157,8 +153,7 @@ class AutomotoBg():
         try:
             month_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'month_id')))
-            month_select = Select(
-                self.browser.find_element_by_name('month_id'))
+            month_select = Select(month_select)
             month_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a month ! - {e}')
@@ -167,7 +162,7 @@ class AutomotoBg():
         try:
             year_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'year_id')))
-            year_select = Select(self.browser.find_element_by_name('year_id'))
+            year_select = Select(year_select)
             year_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a year ! - {e}')
@@ -183,8 +178,7 @@ class AutomotoBg():
         try:
             doors_type_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'door_id')))
-            doors_type_select = Select(
-                self.browser.find_element_by_name('door_id'))
+            doors_type_select = Select(doors_type_select)
             doors_type_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a doors type ! - {e}')
@@ -193,8 +187,7 @@ class AutomotoBg():
         try:
             color_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'color_id')))
-            color_select = Select(
-                self.browser.find_element_by_name('color_id'))
+            color_select = Select(color_select)
             color_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a color ! - {e}')
@@ -203,8 +196,7 @@ class AutomotoBg():
         try:
             euro_standart_select = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.NAME, 'euro_standart_id')))
-            euro_standart_select = Select(
-                self.browser.find_element_by_name('euro_standart_id'))
+            euro_standart_select = Select(euro_standart_select)
             euro_standart_select.select_by_visible_text(choice)
         except BaseException as e:
             print(
