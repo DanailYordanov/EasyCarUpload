@@ -360,19 +360,3 @@ class CarsBgClass():
         confirm_delete_button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//a[@data-action="deleteofferCloseYes"]')))
         confirm_delete_button.click()
-
-
-BASE_DIR = os.path.dirname(__file__)
-
-paths = [
-    os.path.join(BASE_DIR, '..\pics\pic1.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic2.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic3.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic4.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic5.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic6.jpg')
-]
-
-instance = CarsBgClass()
-# instance.publish('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
-#                  '306', '3000', '2012', 'Декември', '150000', '2/3', 'Сив', 'EURO 4', None, paths)

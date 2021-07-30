@@ -107,6 +107,7 @@ class MobileBgClass():
         try:
             model_select = WebDriverWait(self.browser, 30).until(
                 options_present((By.NAME, 'f6')))
+            model_select = Select(model_select)
             model_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a model ! - {e}')
@@ -347,19 +348,3 @@ class MobileBgClass():
         offer_link = offer_link.get_attribute('value')
 
         self.browser.get(offer_link)
-
-
-BASE_DIR = os.path.dirname(__file__)
-
-paths = [
-    os.path.join(BASE_DIR, '..\pics\pic1.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic2.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic3.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic4.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic5.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic6.jpg')
-]
-
-instance = MobileBgClass()
-instance.publish('Седан', 'BMW', '335', '335i', '20000', 'Автоматични', 'Бензин',
-                 '306', '2012', 'Декември', '150000', 'Сив', 'EURO 4', None, paths, '1111111111')

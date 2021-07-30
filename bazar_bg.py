@@ -276,19 +276,3 @@ class BazarBgClass():
     def delete(self, offer_id):
         self.browser.get(
             f'https://bazar.bg/ads/archive/{offer_id}')
-
-
-BASE_DIR = os.path.dirname(__file__)
-
-paths = [
-    os.path.join(BASE_DIR, '..\pics\pic1.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic2.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic3.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic4.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic5.jpg'),
-    os.path.join(BASE_DIR, '..\pics\pic6.jpg')
-]
-
-instance = BazarBgClass()
-instance.publish('Седан', 'BMW', '335', '335i', '20000',
-                 'Автоматични', 'Бензин', '2012', '150000', 'Колата е перфектна', paths, '1231231232')
