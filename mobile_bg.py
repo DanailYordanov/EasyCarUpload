@@ -349,10 +349,28 @@ class MobileBgClass():
         self.browser.get(offer_link)
 
         offer_id = self.get_offer_id()
-        
+
         self.browser.quit()
 
         return offer_id
+
+    def delete(self, offer_id):
+
+        self.browser.get(
+            'https://www.mobile.bg/pcgi/mobile.cgi?act=6&subact=4')
+
+        script = """javascript:if (confirm('Изтриване на обявата?')){document.search.actions.value='23';
+            document.search.s2.value='1';document.search.s3.value='1';document.search.s4.value='1';
+            document.search.s5.value='1';document.search.s6.value='%s';document.search.submit();}
+        """ % offer_id
+
+        self.browser.execute_script(script)
+
+        WebDriverWait(self.browser, 30).until(EC.alert_is_present())
+
+        self.browser.switch_to.alert.accept()
+
+        self.browser.quit()
 
     def get_offer_id(self):
 
