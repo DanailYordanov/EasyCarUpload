@@ -348,6 +348,12 @@ class CarsBgClass():
             EC.element_to_be_clickable((By.ID, 'publishBtn')))
         button.click()
 
+        offer_id = self.get_offer_id()
+
+        self.browser.quit()
+
+        return offer_id
+
     def delete(self, offer_id):
 
         self.browser.get(
@@ -360,3 +366,16 @@ class CarsBgClass():
         confirm_delete_button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.XPATH, '//a[@data-action="deleteofferCloseYes"]')))
         confirm_delete_button.click()
+
+    def get_offer_id(self):
+
+        # Wait for the offer details page to load
+
+        WebDriverWait(self.browser, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'description')))
+
+        url = self.browser.current_url
+        offer_id = url.split('/')[-1]
+        offer_id = offer_id.split('?')[0]
+
+        return offer_id

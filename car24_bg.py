@@ -55,7 +55,6 @@ class Car24BgClass():
         try:
             model_select = WebDriverWait(self.browser, 30).until(
                 options_present((By.NAME, 'f5')))
-            model_select = Select(model_select)
             model_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a model ! - {e}')
@@ -270,3 +269,22 @@ class Car24BgClass():
         publish_button = WebDriverWait(self.browser, 30).until(
             EC.element_to_be_clickable((By.TAG_NAME, 'button')))
         publish_button.click()
+
+        offer_id = self.get_offer_id()
+
+        self.browser.quit()
+
+        return offer_id
+
+    def get_offer_id(self):
+
+        # Wait for the offer details page to load
+
+        WebDriverWait(self.browser, 30).until(
+            EC.presence_of_element_located((By.CLASS_NAME, 'ad')))
+
+        url = self.browser.current_url
+        offer_id = url.split('/')[-1]
+        offer_id = offer_id.split('=')[-1]
+
+        return offer_id
