@@ -355,17 +355,26 @@ class CarsBgClass():
         return offer_id
 
     def delete(self, offer_id):
+        try:
+            self.browser.get(
+                f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
 
-        self.browser.get(
-            f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
+            delete_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//button[@data-action="openDeleteoffer"]')))
+            delete_button.click()
 
-        delete_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//button[@data-action="openDeleteoffer"]')))
-        delete_button.click()
+            confirm_delete_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//a[@data-action="deleteofferCloseYes"]')))
+            confirm_delete_button.click()
 
-        confirm_delete_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//a[@data-action="deleteofferCloseYes"]')))
-        confirm_delete_button.click()
+            self.browser.get(
+                f'https://www.cars.bg/offer/{offer_id}?myoffer=1')
+
+            self.browser.find_element_by_xpath('//b[text()="Неактивна Обява"]')
+        except BaseException as e:
+            print(f'Something went wrong while deleting the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def get_offer_id(self):
 
