@@ -1,4 +1,3 @@
-import os
 import pickle
 from decouple import config
 from selenium import webdriver
@@ -351,11 +350,11 @@ class CarsBgClass():
 
             offer_id = self.get_offer_id()
 
-            self.browser.quit()
-
             return offer_id
         except BaseException as e:
             print(f'Something went wrong while publishing the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def delete(self, offer_id):
         try:

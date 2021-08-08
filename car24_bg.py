@@ -1,4 +1,3 @@
-import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
@@ -272,11 +271,11 @@ class Car24BgClass():
 
             offer_id = self.get_offer_id()
 
-            self.browser.quit()
-
             return offer_id
         except BaseException as e:
             print(f'Something went wrong while publishing the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def get_offer_id(self):
         try:
