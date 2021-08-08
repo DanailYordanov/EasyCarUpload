@@ -215,76 +215,80 @@ class Car24BgClass():
     def publish(self, category, brand, model, modification, price,
                 transmission_type, fuel_type, power, year, month, run,
                 color, description, image_paths, phone_number, email_address):
+        try:
+            self.browser.get(
+                'https://www.car24.bg/pcgi/car.cgi?act=5')
 
-        self.browser.get(
-            'https://www.car24.bg/pcgi/car.cgi?act=5')
+            self.choose_brand(brand)
 
-        self.choose_brand(brand)
+            self.choose_model(model)
 
-        self.choose_model(model)
+            self.input_modification(modification)
 
-        self.input_modification(modification)
+            self.choose_fuel_type(fuel_type)
 
-        self.choose_fuel_type(fuel_type)
+            self.input_power(power)
 
-        self.input_power(power)
+            self.choose_transmission_type(transmission_type)
 
-        self.choose_transmission_type(transmission_type)
+            self.choose_category(category)
 
-        self.choose_category(category)
+            self.input_price(price)
 
-        self.input_price(price)
+            self.choose_month(month)
 
-        self.choose_month(month)
+            self.choose_year(year)
 
-        self.choose_year(year)
+            self.input_run(run)
 
-        self.input_run(run)
+            self.choose_color(color)
 
-        self.choose_color(color)
+            self.input_description(description)
 
-        self.input_description(description)
+            self.choose_region('Дупница')
 
-        self.choose_region('Дупница')
+            self.input_phone_number(phone_number)
 
-        self.input_phone_number(phone_number)
+            self.input_email_address(email_address)
 
-        self.input_email_address(email_address)
+            # Click the TOS checkbox with JS
 
-        # Click the TOS checkbox with JS
+            self.browser.execute_script(
+                """document.getElementsByName('chkcond')[0].click();""")
 
-        self.browser.execute_script(
-            """document.getElementsByName('chkcond')[0].click();""")
+            button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
+            button.click()
 
-        button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.TAG_NAME, 'button')))
-        button.click()
+            add_photos_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
+            add_photos_button.click()
 
-        add_photos_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.TAG_NAME, 'button')))
-        add_photos_button.click()
+            self.upload_images(image_paths)
 
-        self.upload_images(image_paths)
+            publish_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
+            publish_button.click()
 
-        publish_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.TAG_NAME, 'button')))
-        publish_button.click()
+            offer_id = self.get_offer_id()
 
-        offer_id = self.get_offer_id()
+            self.browser.quit()
 
-        self.browser.quit()
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while publishing the offer ! - {e}')
 
     def get_offer_id(self):
+        try:
+            # Wait for the offer details page to load
 
-        # Wait for the offer details page to load
+            WebDriverWait(self.browser, 30).until(
+                EC.presence_of_element_located((By.CLASS_NAME, 'ad')))
 
-        WebDriverWait(self.browser, 30).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'ad')))
+            url = self.browser.current_url
+            offer_id = url.split('/')[-1]
+            offer_id = offer_id.split('=')[-1]
 
-        url = self.browser.current_url
-        offer_id = url.split('/')[-1]
-        offer_id = offer_id.split('=')[-1]
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while getting the offer id ! - {e}')
