@@ -1,4 +1,3 @@
-import os
 import time
 import pickle
 from decouple import config
@@ -33,10 +32,9 @@ class AutomotoBg():
         self.load_cookies()
 
     def login(self):
-
-        self.browser.get('https://automoto.bg/login')
-
         try:
+            self.browser.get('https://automoto.bg/login')
+
             cookie_consent_button = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.CLASS_NAME, 'cc-btn')))
             cookie_consent_button.click()
@@ -229,65 +227,74 @@ class AutomotoBg():
     def publish(self, category, brand, model, modification, price,
                 transmission_type, fuel_type, power, displacement, year, month, run,
                 doors_type, color, euro_standart, description, image_paths):
+        try:
+            self.browser.get('https://automoto.bg/listings/create')
 
-        self.browser.get('https://automoto.bg/listings/create')
+            self.choose_brand(brand)
 
-        self.choose_brand(brand)
+            self.choose_model(model)
 
-        self.choose_model(model)
+            self.input_modification(modification)
 
-        self.input_modification(modification)
+            self.choose_category(category)
 
-        self.choose_category(category)
+            self.input_price(price)
 
-        self.input_price(price)
+            self.choose_transmission_type(transmission_type)
 
-        self.choose_transmission_type(transmission_type)
+            self.choose_fuel_type(fuel_type)
 
-        self.choose_fuel_type(fuel_type)
+            self.input_power(power)
 
-        self.input_power(power)
+            self.input_displacement(displacement)
 
-        self.input_displacement(displacement)
+            self.choose_month(month)
 
-        self.choose_month(month)
+            self.choose_year(year)
 
-        self.choose_year(year)
+            self.input_run(run)
 
-        self.input_run(run)
+            self.choose_doors_type(doors_type)
 
-        self.choose_doors_type(doors_type)
+            self.choose_color(color)
 
-        self.choose_color(color)
+            self.choose_euro_standart(euro_standart)
 
-        self.choose_euro_standart(euro_standart)
+            self.input_description(description)
 
-        self.input_description(description)
+            self.upload_images(image_paths)
 
-        self.upload_images(image_paths)
+            button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="ID-listingOnlyCarCreate"]/div[24]/div/button')))
+            button.click()
 
-        button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="ID-listingOnlyCarCreate"]/div[24]/div/button')))
-        button.click()
+            offer_id = self.get_offer_id()
 
-        offer_id = self.get_offer_id()
-
-        self.browser.quit()
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while publishing the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def delete(self, offer_id):
-        self.browser.get(
-            f'https://automoto.bg/profile/delete-listing/{offer_id}')
+        try:
+            self.browser.get(
+                f'https://automoto.bg/profile/delete-listing/{offer_id}')
+        except BaseException as e:
+            print(f'Something went wrong while deleting the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def get_offer_id(self):
+        try:
+            # Wait for the offer details page to load
 
-        # Wait for the offer details page to load
+            WebDriverWait(self.browser, 30).until(
+                EC.presence_of_element_located((By.CLASS_NAME, 'single-vehicle-details')))
 
-        WebDriverWait(self.browser, 30).until(
-            EC.presence_of_element_located((By.CLASS_NAME, 'single-vehicle-details')))
+            url = self.browser.current_url
+            offer_id = url.split('/')[-1]
 
-        url = self.browser.current_url
-        offer_id = url.split('/')[-1]
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while getting the offer id ! - {e}')
