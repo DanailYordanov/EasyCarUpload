@@ -46,11 +46,10 @@ class MobileBgClass():
         self.load_cookies()
 
     def login(self):
-
-        self.browser.get(
-            'https://www.mobile.bg/pcgi/mobile.cgi?act=16&logact=1')
-
         try:
+            self.browser.get(
+                'https://www.mobile.bg/pcgi/mobile.cgi?act=16&logact=1')
+
             cookie_consent_button = WebDriverWait(self.browser, 30).until(
                 EC.element_to_be_clickable((By.CLASS_NAME, 'fc-cta-consent')))
             cookie_consent_button.click()
@@ -91,6 +90,7 @@ class MobileBgClass():
                 self.browser.add_cookie(cookie)
 
             self.browser.refresh()
+            self.browser.find_element_by_class_name('exit')
         except Exception:
             self.login()
 
@@ -283,104 +283,113 @@ class MobileBgClass():
     def publish(self, category, brand, model, modification, price,
                 transmission_type, fuel_type, power, year, month, run,
                 color, euro_standart, description, image_paths, phone_number):
+        try:
+            self.browser.get(
+                'https://www.mobile.bg/pcgi/mobile.cgi?pubtype=1&act=6&subact=4&actions=1')
 
-        self.browser.get(
-            'https://www.mobile.bg/pcgi/mobile.cgi?pubtype=1&act=6&subact=4&actions=1')
+            self.choose_brand(brand)
 
-        self.choose_brand(brand)
+            self.choose_model(model)
 
-        self.choose_model(model)
+            self.input_modification(modification)
 
-        self.input_modification(modification)
+            self.choose_fuel_type(fuel_type)
 
-        self.choose_fuel_type(fuel_type)
+            self.input_power(power)
 
-        self.input_power(power)
+            self.choose_euro_standart(euro_standart)
 
-        self.choose_euro_standart(euro_standart)
+            self.choose_transmission_type(transmission_type)
 
-        self.choose_transmission_type(transmission_type)
+            self.choose_category(category)
 
-        self.choose_category(category)
+            self.input_price(price)
 
-        self.input_price(price)
+            self.choose_month(month)
 
-        self.choose_month(month)
+            self.choose_year(year)
 
-        self.choose_year(year)
+            self.input_run(run)
 
-        self.input_run(run)
+            self.choose_color(color)
 
-        self.choose_color(color)
+            self.choose_region('Дупница')
 
-        self.choose_region('Дупница')
+            self.choose_city('с. Блатино')
 
-        self.choose_city('с. Блатино')
+            self.input_description(description)
 
-        self.input_description(description)
+            self.input_phone_number(phone_number)
 
-        self.input_phone_number(phone_number)
+            price_change_checkbox = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.NAME, 'f28')))
+            price_change_checkbox.click()
 
-        price_change_checkbox = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.NAME, 'f28')))
-        price_change_checkbox.click()
+            publish_advert_checkbox = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//*[@id="mainholder"]/table[6]/tbody/tr/td/form/table[4]/tbody/tr[3]/td/input[2]')))
+            publish_advert_checkbox.click()
 
-        publish_advert_checkbox = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//*[@id="mainholder"]/table[6]/tbody/tr/td/form/table[4]/tbody/tr[3]/td/input[2]')))
-        publish_advert_checkbox.click()
+            button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '//input[@type="button"]')))
+            button.click()
 
-        button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '//input[@type="button"]')))
-        button.click()
+            add_photos_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[6]/tbody/tr/td/table[2]/tbody/tr/td[3]/table[1]/tbody/tr/td[2]/input')))
+            add_photos_button.click()
 
-        add_photos_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[6]/tbody/tr/td/table[2]/tbody/tr/td[3]/table[1]/tbody/tr/td[2]/input')))
-        add_photos_button.click()
+            self.upload_images(image_paths)
 
-        self.upload_images(image_paths)
+            offer_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[3]/tbody/tr/td[1]/a[3]')))
+            offer_button.click()
 
-        offer_button = WebDriverWait(self.browser, 30).until(
-            EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[3]/tbody/tr/td[1]/a[3]')))
-        offer_button.click()
+            offer_link = self.browser.find_element_by_class_name('advpage')
+            offer_link = offer_link.get_attribute('value')
 
-        offer_link = self.browser.find_element_by_class_name('advpage')
-        offer_link = offer_link.get_attribute('value')
+            self.browser.get(offer_link)
 
-        self.browser.get(offer_link)
+            offer_id = self.get_offer_id()
 
-        offer_id = self.get_offer_id()
+            self.browser.quit()
 
-        self.browser.quit()
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while publishing the offer ! - {e}')
 
     def delete(self, offer_id):
+        try:
+            self.browser.get(
+                'https://www.mobile.bg/pcgi/mobile.cgi?act=6&subact=4')
 
-        self.browser.get(
-            'https://www.mobile.bg/pcgi/mobile.cgi?act=6&subact=4')
+            script = """javascript:if (confirm('Изтриване на обявата?')){document.search.actions.value='23';
+                document.search.s2.value='1';document.search.s3.value='1';document.search.s4.value='1';
+                document.search.s5.value='1';document.search.s6.value='%s';document.search.submit();}
+            """ % offer_id
 
-        script = """javascript:if (confirm('Изтриване на обявата?')){document.search.actions.value='23';
-            document.search.s2.value='1';document.search.s3.value='1';document.search.s4.value='1';
-            document.search.s5.value='1';document.search.s6.value='%s';document.search.submit();}
-        """ % offer_id
+            self.browser.execute_script(script)
 
-        self.browser.execute_script(script)
+            WebDriverWait(self.browser, 30).until(EC.alert_is_present())
 
-        WebDriverWait(self.browser, 30).until(EC.alert_is_present())
+            self.browser.switch_to.alert.accept()
 
-        self.browser.switch_to.alert.accept()
-
-        self.browser.quit()
+            self.browser.find_element_by_xpath(
+                '//*[@id="mainholder"]/table[2]/tbody/tr/td[1]/table[1]/tbody/tr/td')
+        except BaseException as e:
+            print(f'Something went wrong while deleting the offer ! - {e}')
+        finally:
+            self.browser.quit()
 
     def get_offer_id(self):
+        try:
+            # Wait for the offer details page to load
 
-        # Wait for the offer details page to load
+            WebDriverWait(self.browser, 30).until(
+                EC.presence_of_element_located((By.NAME, 'search')))
 
-        WebDriverWait(self.browser, 30).until(
-            EC.presence_of_element_located((By.NAME, 'search')))
+            url = self.browser.current_url
+            offer_id = url.split('/')[-1]
+            offer_id = offer_id.split('=')[-1]
 
-        url = self.browser.current_url
-        offer_id = url.split('/')[-1]
-        offer_id = offer_id.split('=')[-1]
-
-        return offer_id
+            return offer_id
+        except BaseException as e:
+            print(f'Something went wrong while getting the offer id ! - {e}')
