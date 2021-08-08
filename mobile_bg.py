@@ -392,3 +392,30 @@ class MobileBgClass():
             return offer_id
         except BaseException as e:
             print(f'Something went wrong while getting the offer id ! - {e}')
+
+    def export_brands(self):
+        try:
+            brands_select = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.NAME, 'marka')))
+            brands_select = Select(brands_select)
+            brands_options = brands_select.options[1:]
+            data = dict()
+
+            for brand_option in brands_options:
+                brand_option.click()
+                models_select = WebDriverWait(self.browser, 30).until(
+                    options_present((By.NAME, 'model')))
+                models_options = models_select.options[1:]
+
+                models = list()
+                for model_option in models_options:
+                    models.append(model_option.text)
+
+                data[brand_option.text] = models
+
+            return data
+        except BaseException as e:
+            print(
+                f'Something went wrong while exporting the brands and models ! - {e}')
+        finally:
+            self.browser.quit()
