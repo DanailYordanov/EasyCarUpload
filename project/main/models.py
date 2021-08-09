@@ -99,10 +99,16 @@ create_year_choices(1990, current_year + 1)
 class Brand(models.Model):
     brand = models.CharField(max_length=50)
 
+    def __str__(self):
+        return self.brand
+
 
 class Model(models.Model):
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE)
     model = models.CharField(max_length=50)
+
+    def __str__(self):
+        return f'{self.brand} - {self.model}'
 
 
 class Car(models.Model):

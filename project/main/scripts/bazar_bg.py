@@ -4,6 +4,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.firefox import GeckoDriverManager
+from .options import options
 
 
 class images_uploaded():
@@ -24,7 +26,8 @@ class images_uploaded():
 class BazarBgClass():
 
     def __init__(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(
+            options=options, executable_path=GeckoDriverManager().install())
         self.browser.implicitly_wait(30)
         self.login()
 

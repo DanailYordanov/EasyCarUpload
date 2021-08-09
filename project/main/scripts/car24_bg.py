@@ -1,10 +1,10 @@
-import pickle
-from decouple import config
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from webdriver_manager.firefox import GeckoDriverManager
+from .options import options
 
 
 class images_uploaded():
@@ -37,66 +37,17 @@ class options_present():
             return False
 
 
-class MobileBgClass():
+class Car24BgClass():
 
     def __init__(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Firefox(
+            options=options, executable_path=GeckoDriverManager().install())
         self.browser.implicitly_wait(30)
-        self.load_cookies()
-
-    def login(self):
-        try:
-            self.browser.get(
-                'https://www.mobile.bg/pcgi/mobile.cgi?act=16&logact=1')
-
-            cookie_consent_button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, 'fc-cta-consent')))
-            cookie_consent_button.click()
-
-            email = config('MOBILE_BG_EMAIL')
-            password = config('MOBILE_BG_PASSWORD')
-
-            login_type_button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '//input[@type="radio" and @value="1"]')))
-            login_type_button.click()
-
-            email_input = WebDriverWait(self.browser, 30).until(
-                EC.visibility_of_element_located((By.NAME, 'usr')))
-            email_input.send_keys(email)
-
-            password_input = WebDriverWait(self.browser, 30).until(
-                EC.visibility_of_element_located((By.NAME, 'pwd')))
-            password_input.send_keys(password)
-
-            button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.CLASS_NAME, 'loginButton')))
-            button.click()
-
-            WebDriverWait(self.browser, 30).until(
-                EC.visibility_of_element_located((By.CLASS_NAME, 'exit')))
-
-            pickle.dump(self.browser.get_cookies(),
-                        open("mobile_bg_cookies.pkl", "wb"))
-        except BaseException as e:
-            print(f'Something went wrong while logging you in! - {e}')
-
-    def load_cookies(self):
-        try:
-            self.browser.get('https://www.mobile.bg/')
-            cookies = pickle.load(open('mobile_bg_cookies.pkl', 'rb'))
-
-            for cookie in cookies:
-                self.browser.add_cookie(cookie)
-
-            self.browser.refresh()
-            self.browser.find_element_by_class_name('exit')
-        except Exception:
-            self.login()
 
     def choose_brand(self, choice):
         try:
             brand_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f5')))
+                EC.element_to_be_clickable((By.NAME, 'f4')))
             brand_select = Select(brand_select)
             brand_select.select_by_visible_text(choice)
         except BaseException as e:
@@ -105,7 +56,7 @@ class MobileBgClass():
     def choose_model(self, choice):
         try:
             model_select = WebDriverWait(self.browser, 30).until(
-                options_present((By.NAME, 'f6')))
+                options_present((By.NAME, 'f5')))
             model_select.select_by_visible_text(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a model ! - {e}')
@@ -114,7 +65,7 @@ class MobileBgClass():
         if input:
             try:
                 modification_input = self.browser.find_element_by_name(
-                    'f7')
+                    'f6')
                 modification_input.send_keys(input)
             except BaseException as e:
                 print(
@@ -123,7 +74,7 @@ class MobileBgClass():
     def choose_category(self, choice):
         try:
             category_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f11')))
+                EC.element_to_be_clickable((By.NAME, 'f10')))
             category_select = Select(category_select)
             category_select.select_by_visible_text(choice)
         except BaseException as e:
@@ -131,7 +82,7 @@ class MobileBgClass():
 
     def input_price(self, input):
         try:
-            price_input = self.browser.find_element_by_name('f12')
+            price_input = self.browser.find_element_by_name('f11')
             price_input.send_keys(input)
         except BaseException as e:
             print(f'Something went wrong while inputting a price ! - {e}')
@@ -144,7 +95,7 @@ class MobileBgClass():
 
         try:
             transmission_type_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f10')))
+                EC.element_to_be_clickable((By.NAME, 'f9')))
             transmission_type_select = Select(transmission_type_select)
             transmission_type_select.select_by_visible_text(choice)
         except BaseException as e:
@@ -163,7 +114,7 @@ class MobileBgClass():
 
         try:
             fuel_type_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f8')))
+                EC.element_to_be_clickable((By.NAME, 'f7')))
             fuel_type_select = Select(fuel_type_select)
             fuel_type_select.select_by_visible_text(choice)
         except BaseException as e:
@@ -172,17 +123,15 @@ class MobileBgClass():
     def input_power(self, input):
         if input:
             try:
-                power_input = self.browser.find_element_by_name('f9')
+                power_input = self.browser.find_element_by_name('f8')
                 power_input.send_keys(input)
             except BaseException as e:
                 print(f'Something went wrong while inputting power ! - {e}')
 
     def choose_month(self, choice):
-        choice = choice.lower()
-
         try:
             month_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f14')))
+                EC.element_to_be_clickable((By.NAME, 'f13')))
             month_select = Select(month_select)
             month_select.select_by_visible_text(choice)
         except BaseException as e:
@@ -191,15 +140,15 @@ class MobileBgClass():
     def choose_year(self, choice):
         try:
             year_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f15')))
+                EC.element_to_be_clickable((By.NAME, 'f14')))
             year_select = Select(year_select)
-            year_select.select_by_visible_text(choice)
+            year_select.select_by_value(choice)
         except BaseException as e:
             print(f'Something went wrong while choosing a year ! - {e}')
 
     def input_run(self, input):
         try:
-            run_input = self.browser.find_element_by_name('f16')
+            run_input = self.browser.find_element_by_name('f15')
             run_input.send_keys(input)
         except BaseException as e:
             print(f'Something went wrong while inputting run ! - {e}')
@@ -208,29 +157,16 @@ class MobileBgClass():
         if choice:
             try:
                 color_select = WebDriverWait(self.browser, 30).until(
-                    EC.element_to_be_clickable((By.NAME, 'f17')))
+                    EC.element_to_be_clickable((By.NAME, 'f16')))
                 color_select = Select(color_select)
                 color_select.select_by_visible_text(choice)
             except BaseException as e:
                 print(f'Something went wrong while choosing a color ! - {e}')
 
-    def choose_euro_standart(self, choice):
-        if choice:
-            choice = 'Евро ' + choice[-1]
-
-            try:
-                euro_standart_select = WebDriverWait(self.browser, 30).until(
-                    EC.element_to_be_clickable((By.NAME, 'f29')))
-                euro_standart_select = Select(euro_standart_select)
-                euro_standart_select.select_by_visible_text(choice)
-            except BaseException as e:
-                print(
-                    f'Something went wrong while choosing a EURO standart ! - {e}')
-
     def input_description(self, input):
         if input:
             try:
-                description_input = self.browser.find_element_by_name('f21')
+                description_input = self.browser.find_element_by_name('f19')
                 description_input.send_keys(input)
             except BaseException as e:
                 print(
@@ -239,29 +175,28 @@ class MobileBgClass():
     def choose_region(self, choice):
         try:
             region_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f18')))
+                EC.element_to_be_clickable((By.NAME, 'f17')))
             region_select = Select(region_select)
             region_select.select_by_visible_text(choice)
         except BaseException as e:
             print(
                 f'Something went wrong while choosing a region ! - {e}')
 
-    def choose_city(self, choice):
-        try:
-            city_select = WebDriverWait(self.browser, 30).until(
-                options_present((By.NAME, 'f19')))
-            city_select.select_by_visible_text(choice)
-        except BaseException as e:
-            print(
-                f'Something went wrong while choosing a city ! - {e}')
-
     def input_phone_number(self, input):
         try:
-            phone_number_input = self.browser.find_element_by_name('f22')
+            phone_number_input = self.browser.find_element_by_name('f20')
             phone_number_input.send_keys(input)
         except BaseException as e:
             print(
                 f'Something went wrong while inputting a phone number ! - {e}')
+
+    def input_email_address(self, input):
+        try:
+            email_address_input = self.browser.find_element_by_name('f21')
+            email_address_input.send_keys(input)
+        except BaseException as e:
+            print(
+                f'Something went wrong while inputting an email address ! - {e}')
 
     def upload_images(self, paths):
         try:
@@ -281,10 +216,10 @@ class MobileBgClass():
 
     def publish(self, category, brand, model, modification, price,
                 transmission_type, fuel_type, power, year, month, run,
-                color, euro_standart, description, image_paths, phone_number):
+                color, description, image_paths, phone_number, email_address):
         try:
             self.browser.get(
-                'https://www.mobile.bg/pcgi/mobile.cgi?pubtype=1&act=6&subact=4&actions=1')
+                'https://www.car24.bg/pcgi/car.cgi?act=5')
 
             self.choose_brand(brand)
 
@@ -295,8 +230,6 @@ class MobileBgClass():
             self.choose_fuel_type(fuel_type)
 
             self.input_power(power)
-
-            self.choose_euro_standart(euro_standart)
 
             self.choose_transmission_type(transmission_type)
 
@@ -312,40 +245,32 @@ class MobileBgClass():
 
             self.choose_color(color)
 
-            self.choose_region('Дупница')
-
-            self.choose_city('с. Блатино')
-
             self.input_description(description)
+
+            self.choose_region('Дупница')
 
             self.input_phone_number(phone_number)
 
-            price_change_checkbox = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'f28')))
-            price_change_checkbox.click()
+            self.input_email_address(email_address)
 
-            publish_advert_checkbox = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '//*[@id="mainholder"]/table[6]/tbody/tr/td/form/table[4]/tbody/tr[3]/td/input[2]')))
-            publish_advert_checkbox.click()
+            # Click the TOS checkbox with JS
+
+            self.browser.execute_script(
+                """document.getElementsByName('chkcond')[0].click();""")
 
             button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '//input[@type="button"]')))
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
             button.click()
 
             add_photos_button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[6]/tbody/tr/td/table[2]/tbody/tr/td[3]/table[1]/tbody/tr/td[2]/input')))
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
             add_photos_button.click()
 
             self.upload_images(image_paths)
 
-            offer_button = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.XPATH, '/html/body/div[1]/table[3]/tbody/tr/td[1]/a[3]')))
-            offer_button.click()
-
-            offer_link = self.browser.find_element_by_class_name('advpage')
-            offer_link = offer_link.get_attribute('value')
-
-            self.browser.get(offer_link)
+            publish_button = WebDriverWait(self.browser, 30).until(
+                EC.element_to_be_clickable((By.TAG_NAME, 'button')))
+            publish_button.click()
 
             offer_id = self.get_offer_id()
 
@@ -355,35 +280,12 @@ class MobileBgClass():
         finally:
             self.browser.quit()
 
-    def delete(self, offer_id):
-        try:
-            self.browser.get(
-                'https://www.mobile.bg/pcgi/mobile.cgi?act=6&subact=4')
-
-            script = """javascript:if (confirm('Изтриване на обявата?')){document.search.actions.value='23';
-                document.search.s2.value='1';document.search.s3.value='1';document.search.s4.value='1';
-                document.search.s5.value='1';document.search.s6.value='%s';document.search.submit();}
-            """ % offer_id
-
-            self.browser.execute_script(script)
-
-            WebDriverWait(self.browser, 30).until(EC.alert_is_present())
-
-            self.browser.switch_to.alert.accept()
-
-            self.browser.find_element_by_xpath(
-                '//*[@id="mainholder"]/table[2]/tbody/tr/td[1]/table[1]/tbody/tr/td')
-        except BaseException as e:
-            print(f'Something went wrong while deleting the offer ! - {e}')
-        finally:
-            self.browser.quit()
-
     def get_offer_id(self):
         try:
             # Wait for the offer details page to load
 
             WebDriverWait(self.browser, 30).until(
-                EC.presence_of_element_located((By.NAME, 'search')))
+                EC.presence_of_element_located((By.CLASS_NAME, 'ad')))
 
             url = self.browser.current_url
             offer_id = url.split('/')[-1]
@@ -392,30 +294,3 @@ class MobileBgClass():
             return offer_id
         except BaseException as e:
             print(f'Something went wrong while getting the offer id ! - {e}')
-
-    def export_brands(self):
-        try:
-            brands_select = WebDriverWait(self.browser, 30).until(
-                EC.element_to_be_clickable((By.NAME, 'marka')))
-            brands_select = Select(brands_select)
-            brands_options = brands_select.options[1:]
-            data = dict()
-
-            for brand_option in brands_options:
-                brand_option.click()
-                models_select = WebDriverWait(self.browser, 30).until(
-                    options_present((By.NAME, 'model')))
-                models_options = models_select.options[1:]
-
-                models = list()
-                for model_option in models_options:
-                    models.append(model_option.text)
-
-                data[brand_option.text] = models
-
-            return data
-        except BaseException as e:
-            print(
-                f'Something went wrong while exporting the brands and models ! - {e}')
-        finally:
-            self.browser.quit()
