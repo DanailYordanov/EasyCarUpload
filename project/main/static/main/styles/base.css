@@ -16,8 +16,13 @@ ul, ol {
 }
 
 header {
+    top: 0;
+    z-index: 99999;
+    background: #fff;
+    position: sticky;
     grid-column: col-start / span 12;
-    border-bottom: 1px solid #a6a4a4;
+    border-bottom: 1px solid #ebebeb;
+    transition: box-shadow .30s ease-in;
 }
 
 footer {
@@ -25,7 +30,7 @@ footer {
     align-items: center;
     justify-content: center;
     grid-column: col-start / span 12;
-    border-top: 1px solid #a6a4a4;
+    border-top: 1px solid #ebebeb;
 }
 
 nav {
@@ -56,7 +61,7 @@ input {
     color: #757474;
     border: 1px solid #e8e8e8;
     font-family: 'Ubuntu', sans-serif;
-    transition: border-color .15s ease-in-out,border-color .15s ease-in-out;
+    transition: border-color .15s ease-in-out;
 }
 
 input:focus, input:active {
@@ -74,7 +79,7 @@ button[type='submit'] {
     letter-spacing: 1px;
     text-transform: uppercase;
     background-color: #ff858f;
-    transition: background-color .30s ease-in-out, background-color .30s ease-in-out;
+    transition: background-color .30s ease-in-out;
 }
 
 button[type='submit']:hover {
@@ -98,6 +103,31 @@ button[type='submit']:hover {
     grid-column: col-start 2 / col-start 12;
 }
 
+@media only screen and (min-width: 600px)
+{
+    .form-page {
+        grid-column: col-start 3 / col-start 11;
+    }
+}
+
+@media only screen and (min-width: 1024px)
+{
+    .form-page {
+        grid-column: col-start 4 / col-start 10;
+    }
+}
+
+@media only screen and (min-width: 1300px)
+{
+    .form-page {
+        grid-column: col-start 5 / col-start 9;
+    }
+}
+
+.sticky {
+    box-shadow: 0 5px 30px rgb(0 0 0 / 15%);
+}
+
 .input-select-wrapper {
     width: 100%;
 }
@@ -108,7 +138,7 @@ button[type='submit']:hover {
     color: #757474;
     border-radius: 0;
     padding-left: 1em;
-    transition: border-color .15s ease-in-out,border-color .15s ease-in-out;
+    transition: border-color .15s ease-in-out;
 }
 
 .nice-select .list {
@@ -116,6 +146,6 @@ button[type='submit']:hover {
     border-radius: 0;
 }
 
-.nice-select.open {
+.nice-select.open, .nice-select:focus {
     border: 2px solid #ff858f;
 }
