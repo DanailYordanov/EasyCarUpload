@@ -127,11 +127,12 @@ class Car(models.Model):
         choices=FUEL_TYPE_CHOICES, max_length=10)
     power = models.CharField(max_length=5)
     displacement = models.CharField(max_length=5)
-    year = models.CharField(YEAR_CHOICES, max_length=4)
-    month = models.CharField(MONTH_CHOICES, max_length=15)
+    year = models.CharField(choices=YEAR_CHOICES, max_length=4)
+    month = models.CharField(choices=MONTH_CHOICES, max_length=15)
     run = models.CharField(max_length=10)
-    color = models.CharField(COLOR_CHOICES, max_length=20)
-    euro_standart = models.CharField(EURO_STANDART_CHOICES, max_length=10)
+    color = models.CharField(choices=COLOR_CHOICES, max_length=20)
+    euro_standart = models.CharField(
+        choices=EURO_STANDART_CHOICES, max_length=10)
     description = models.CharField(max_length=400)
 
 
