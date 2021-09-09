@@ -120,20 +120,23 @@ class Car(models.Model):
     model = models.ForeignKey(Model, on_delete=models.SET_NULL, null=True)
     modification = models.CharField(max_length=100)
     engine_type = models.CharField(max_length=20)
-    price = models.CharField(max_length=10)
+    price = models.IntegerField()
     transmission_type = models.CharField(
         choices=TRANSMISSION_TYPE_CHOICES, max_length=20)
     fuel_type = models.CharField(
         choices=FUEL_TYPE_CHOICES, max_length=10)
-    power = models.CharField(max_length=5)
-    displacement = models.CharField(max_length=5)
-    year = models.CharField(choices=YEAR_CHOICES, max_length=4)
+    power = models.IntegerField()
+    displacement = models.IntegerField()
+    year = models.IntegerField(choices=YEAR_CHOICES)
     month = models.CharField(choices=MONTH_CHOICES, max_length=15)
-    run = models.CharField(max_length=10)
+    run = models.IntegerField()
     color = models.CharField(choices=COLOR_CHOICES, max_length=20)
     euro_standart = models.CharField(
         choices=EURO_STANDART_CHOICES, max_length=10)
     description = models.CharField(max_length=400)
+
+    def __str__(self):
+        return f'{self.brand} {self.model} - {self.price}лв.'
 
 
 class Image(models.Model):

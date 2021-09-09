@@ -1,14 +1,15 @@
 from .models import Model
 from .forms import CarModelForm
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 
 
 def home(request):
     return render(request, 'main/home.html')
 
 
+@login_required
 def create(request):
-
     if request.method == 'POST':
         form = CarModelForm(request.POST)
 
