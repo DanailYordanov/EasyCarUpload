@@ -34,4 +34,28 @@ $(function () {
             }
         });
     }
+
+    // Submit uploaded images
+
+    $('#id_images').change(submitFormAjax);
+
+    function submitFormAjax() {
+        var form = $('#createForm')[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            type: 'POST',
+            url: $(form).attr('action'),
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('#id_images').val('');
+            },
+            error: function (data) {
+                alert('Нещо се обърка. Опитайте отново!');
+            }
+        });
+    }
 });

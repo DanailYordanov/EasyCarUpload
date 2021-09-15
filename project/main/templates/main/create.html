@@ -8,20 +8,25 @@
 {% endblock head %}
 
 {% block content %}
-<form action="{% url 'main:create' %}" class="form-page" id="createForm" method="post"
-    data-models-url="{% url 'main:load-models' %}" novalidate>
-    {% csrf_token %}
-    {% for field in form %}
-    <div class="input-select-wrapper">
-        {{ field.label_tag }}
-        {{ field }}
-        {% if field.errors %}
-        {{ field.errors }}
-        {% endif %}
-    </div>
-    {% endfor %}
-    <button type="submit">Submit</button>
-</form>
+<div class="forms-wrapper">
+    <form action="{% url 'main:create' %}" class="form-flex" id="createForm" method="post"
+        data-models-url="{% url 'main:load-models' %}" enctype="multipart/form-data" novalidate>
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="input-select-wrapper">
+            {{ field.label_tag }}
+            {{ field }}
+            {{ field.errors }}
+        </div>
+        {% endfor %}
+
+        <div class="grid-images-wrapper">
+            {% include 'main/images_input.html' %}
+        </div>
+
+        <button type="button" class="submit-button">Submit</button>
+    </form>
+</div>
 {% endblock content %}
 
 {% block scripts %}

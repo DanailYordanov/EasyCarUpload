@@ -1,5 +1,5 @@
 from .models import Model
-from .forms import CarModelForm
+from .forms import CarModelForm, MAX_IMAGE_FORMS_NUM
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
@@ -11,19 +11,21 @@ def home(request):
 @login_required
 def create(request):
     if request.method == 'POST':
-        form = CarModelForm(request.POST)
-
-        if form.is_valid():
-            form.instance.user = request.user
-            instance = form.save()
-            return redirect(instance.get_absolute_url())
+        form = CarModelForm(request.POST, request.FILES,
+                            initial={'item_id': '123'})
+        if request.is_ajax():
+            pass
+        print(request.POST)
+        print(form.cleaned_data)
+        print(request.FILES.getlist('images'))
     else:
-        form = CarModelForm()
+        form = CarModelForm(initial={'item_id': '123'})
 
+    blank_forms_num = range(MAX_IMAGE_FORMS_NUM)
     context = {
-        'form': form
+        'form': form,
+        'blank_forms_num': blank_forms_num
     }
-
     return render(request, 'main/create.html', context)
 
 
