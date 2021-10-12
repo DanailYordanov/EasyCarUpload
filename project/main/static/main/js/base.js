@@ -16,96 +16,84 @@ $(function () {
 
     $('#id_brand').change(modelOptionsLoad);
 
-    function modelOptionsLoad() {
-        var brand_id = $(this).val();
-        var loadModelsUrl = $("#createForm").attr("data-models-url")
-
-        $.ajax({
-            url: loadModelsUrl,
-            data: {
-                'brand_id': brand_id
-            },
-            success: function (data) {
-                $("#id_model").html(data);
-                $('#id_model').niceSelect('update');
-            },
-            error: function (response) {
-                alert('Нещо се обърка. Опитайте отново!')
-            }
-        });
-    }
-
-    // // Submit uploaded images
-
-    // $('#id_images').change(submitFormAjax);
-
-    // function submitFormAjax() {
-    //     var form = $('#createForm')[0];
-    //     var formData = new FormData(form);
-
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: $(form).attr('action'),
-    //         data: formData,
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         success: function (data) {
-    //             $('#id_images').val('');
-    //         },
-    //         error: function (data) {
-    //             alert('Нещо се обърка. Опитайте отново!');
-    //         }
-    //     });
-    // }
-
-    // Upload files
-
-    var formData = new FormData();
+    // Submit uploaded images
 
     $('#id_images').change(uploadFiles);
 
-    function uploadFiles() {
-        var fileData = $('#id_images').prop('files');
-
-        for (var i = 0; i < fileData.length; i++) {
-            formData.append('images', fileData[i]);
-        }
-
-        loadImages(formData.getAll('images'));
-        console.log(formData.getAll('images').length);
-
-    };
-
-    function loadImages(files) {
-        for (var i = 0; i < files.length; i++) {
-            readURL(files[i]);
-        }
-    };
-
-    function readURL(file) {
-        var reader = new FileReader();
-
-        reader.onload = function (e) {
-            var input = $('.input-image[src=""]').first();
-            input.attr('src', e.target.result);
-            input.attr('name', file['name']);
-        };
-
-        reader.readAsDataURL(file);
-    }
-
     $('#delete').click(removeImage);
 
-    function removeImage(name) {
-        name = 'koli 5 229.jpg';
-        for (var i = 0; i < formData.getAll('images').length; i++) {
-            if (formData.getAll('images')[i].name == name) {
-                formData.getAll('images').splice(i);
-                console.log(formData.getAll('images'));
-            }
+});
+
+var formData = new FormData();
+
+function modelOptionsLoad() {
+    var brand_id = $(this).val();
+    var loadModelsUrl = $('#createForm').attr('data-models-url');
+
+    $.ajax({
+        url: loadModelsUrl,
+        data: {
+            'brand_id': brand_id
+        },
+        success: function (data) {
+            $('#id_model').html(data);
+            $('#id_model').niceSelect('update');
+        },
+        error: function (response) {
+            alert('Нещо се обърка. Опитайте отново!');
         }
-        console.log(formData.getAll('images'));
+    });
+}
+
+function uploadFiles() {
+    var fileData = $('#id_images').prop('files');
+
+    for (var i = 0; i < fileData.length; i++) {
+        formData.append('images[]', fileData[i]);
+    }
+
+    loadImages(fileData);
+
+    $('#id_images').val('');
+};
+
+function loadImages(files) {
+    for (var i = 0; i < files.length; i++) {
+        readURL(files[i]);
+    }
+};
+
+function readURL(file) {
+    var reader = new FileReader();
+
+    reader.onload = function (e) {
+        var inputedImage = $('.inputed-image[src=""]').first();
+        inputedImage.attr('src', e.target.result);
+        inputedImage.attr('image-name', file['name']);
+
+        var parentDiv = inputedImage.parent();
+        parentDiv.show();
+        parentDiv.next().hide();
     };
 
-});
+    reader.readAsDataURL(file);
+}
+
+function removeImage(parentImgContainer) {
+    var inputedImage = parentImgContainer.find('.inputed-image');
+    var imageName = inputedImage.attr('image-name');
+    var filtered = formData.getAll('images[]').filter(image => image['name'] != imageName);
+
+    formData.delete('images[]');
+    filtered.forEach(image => formData.append('images[]', image));
+
+    clearImages();
+    loadImages(formData.getAll('images[]'));
+};
+
+function clearImages() {
+    $('div.single-image-wrapper').hide();
+    $('.inputed-image').attr('image-name', '');
+    $('.inputed-image').attr('src', '');
+    $('label.single-image-wrapper').show();
+}

@@ -1,15 +1,12 @@
 {% load static %}
-{% for image in images %}
-<div class="single-image-wrapper">
-    <img class="input-image" alt="Image">
-    <a href="#">
+{% for _ in blank_forms_num %}
+<div class="single-image-wrapper" style="display: none;">
+    <a href="#" onclick="removeImage($(this).parent()); return false;" class="delete-button">
         <img src="{% static 'main/svgs/cross.svg' %}" class="cross-svg" alt="Cross Icon">
     </a>
+    <img class="inputed-image" image-name="" src="" alt="Image">
 </div>
-{% endfor %}
-{% for _ in blank_forms_num %}
 <label class="single-image-wrapper" for="id_images">
-    <img class="input-image" src="" alt="Image">
     <img src="{% static 'main/svgs/camera.svg' %}" class="camera-svg" alt="Camera Icon">
 </label>
 {% endfor %}

@@ -10,16 +10,12 @@ class CarModelForm(forms.ModelForm):
         Brand.objects.all(), label='Марка', empty_label='Избери')
     images = forms.ImageField(required=False,
                               widget=forms.ClearableFileInput(attrs={'multiple': True, 'hidden': ''}))
-    item_id = forms.CharField(
-        widget=forms.HiddenInput(), disabled=True)
-    blank_forms_num = forms.CharField(
-        widget=forms.HiddenInput(), disabled=True)
 
     class Meta:
         model = Car
         fields = ['category', 'brand', 'model', 'modification', 'engine_type', 'price',
                   'transmission_type', 'fuel_type', 'power', 'displacement', 'year',
-                  'month', 'run', 'color', 'euro_standart', 'description', 'images', 'item_id', 'blank_forms_num']
+                  'month', 'run', 'color', 'euro_standart', 'description', 'images']
         widgets = {
             'description': forms.Textarea
         }
