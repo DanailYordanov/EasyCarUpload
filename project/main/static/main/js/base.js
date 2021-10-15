@@ -22,6 +22,10 @@ $(function () {
 
     $('#delete').click(removeImage);
 
+    $('form').submit(function (e) {
+        submitForm(e);
+    });
+
 });
 
 var formData = new FormData();
@@ -49,7 +53,7 @@ function uploadFiles() {
     var fileData = $('#id_images').prop('files');
 
     for (var i = 0; i < fileData.length; i++) {
-        formData.append('images[]', fileData[i]);
+        formData.append('images', fileData[i]);
     }
 
     loadImages(fileData);
@@ -82,13 +86,13 @@ function readURL(file) {
 function removeImage(parentImgContainer) {
     var inputedImage = parentImgContainer.find('.inputed-image');
     var imageName = inputedImage.attr('image-name');
-    var filtered = formData.getAll('images[]').filter(image => image['name'] != imageName);
+    var filtered = formData.getAll('images').filter(image => image['name'] != imageName);
 
-    formData.delete('images[]');
-    filtered.forEach(image => formData.append('images[]', image));
+    formData.delete('images');
+    filtered.forEach(image => formData.append('images', image));
 
     clearImages();
-    loadImages(formData.getAll('images[]'));
+    loadImages(formData.getAll('images'));
 };
 
 function clearImages() {
@@ -96,4 +100,28 @@ function clearImages() {
     $('.inputed-image').attr('image-name', '');
     $('.inputed-image').attr('src', '');
     $('label.single-image-wrapper').show();
+}
+
+function submitForm(e) {
+    e.preventDefault();
+
+    var form = $(this);
+    var url = form.attr('action');
+    var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
+    var newFormData = new FormData($('form')[0]);
+    formData.getAll('images').forEach(image => newFormData.append('images', image));
+
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: newFormData,
+        processData: false,
+        contentType: false,
+        headers: {
+            'X-CSRFToken': csrf_token
+        },
+        success: function (response) {
+            console.log(response);
+        },
+    });
 }
