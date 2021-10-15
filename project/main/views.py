@@ -1,5 +1,5 @@
 from .models import Model
-from .forms import CarModelForm, MAX_IMAGE_FORMS_NUM
+from .forms import CarModelForm, IMAGES_NUMBER
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 
@@ -17,10 +17,9 @@ def create(request):
     else:
         form = CarModelForm()
 
-    blank_forms_num = range(MAX_IMAGE_FORMS_NUM)
     context = {
         'form': form,
-        'blank_forms_num': blank_forms_num
+        'images_number_list': range(IMAGES_NUMBER)
     }
 
     return render(request, 'main/create.html', context)

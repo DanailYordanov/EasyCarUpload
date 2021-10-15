@@ -28,8 +28,6 @@ $(function () {
 
 });
 
-var formData = new FormData();
-
 function modelOptionsLoad() {
     var brand_id = $(this).val();
     var loadModelsUrl = $('#createForm').attr('data-models-url');
@@ -49,11 +47,13 @@ function modelOptionsLoad() {
     });
 }
 
+var uploadedImages = [];
+
 function uploadFiles() {
     var fileData = $('#id_images').prop('files');
 
-    for (var i = 0; i < fileData.length; i++) {
-        formData.append('images', fileData[i]);
+    for (let i = 0; i < fileData.length; i++) {
+        uploadedImages.push(fileData[i]);
     }
 
     loadImages(fileData);
@@ -73,7 +73,6 @@ function readURL(file) {
     reader.onload = function (e) {
         var inputedImage = $('.inputed-image[src=""]').first();
         inputedImage.attr('src', e.target.result);
-        inputedImage.attr('image-name', file['name']);
 
         var parentDiv = inputedImage.parent();
         parentDiv.show();
@@ -85,19 +84,16 @@ function readURL(file) {
 
 function removeImage(parentImgContainer) {
     var inputedImage = parentImgContainer.find('.inputed-image');
-    var imageName = inputedImage.attr('image-name');
-    var filtered = formData.getAll('images').filter(image => image['name'] != imageName);
+    var imageNumber = inputedImage.attr('image-number');
 
-    formData.delete('images');
-    filtered.forEach(image => formData.append('images', image));
+    uploadedImages.splice(imageNumber, 1);
 
     clearImages();
-    loadImages(formData.getAll('images'));
+    loadImages(uploadedImages);
 };
 
 function clearImages() {
     $('div.single-image-wrapper').hide();
-    $('.inputed-image').attr('image-name', '');
     $('.inputed-image').attr('src', '');
     $('label.single-image-wrapper').show();
 }
@@ -108,13 +104,13 @@ function submitForm(e) {
     var form = $(this);
     var url = form.attr('action');
     var csrf_token = $("input[name=csrfmiddlewaretoken]").val();
-    var newFormData = new FormData($('form')[0]);
-    formData.getAll('images').forEach(image => newFormData.append('images', image));
+    var formData = new FormData($('form')[0]);
+    uploadedImages.forEach(image => formData.append('images', image));
 
     $.ajax({
         url: url,
         type: 'POST',
-        data: newFormData,
+        data: formData,
         processData: false,
         contentType: false,
         headers: {

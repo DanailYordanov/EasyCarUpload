@@ -2,7 +2,7 @@ from django import forms
 from .models import Brand, Model, Car
 
 
-MAX_IMAGE_FORMS_NUM = 9
+IMAGES_NUMBER = 9
 
 
 class CarModelForm(forms.ModelForm):
