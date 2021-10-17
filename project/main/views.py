@@ -2,6 +2,7 @@ from .models import Model
 from .forms import CarModelForm, IMAGES_NUMBER
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 
 
 def home(request):
@@ -12,8 +13,11 @@ def home(request):
 def create(request):
     if request.method == 'POST':
         form = CarModelForm(request.POST, request.FILES)
-        if request.is_ajax():
-            pass
+        if form.is_valid():
+            form.intsance.user = request.user
+            form.save()
+        else:
+            return JsonResponse(form.errors)
     else:
         form = CarModelForm()
 

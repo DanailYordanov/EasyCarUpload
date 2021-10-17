@@ -117,7 +117,10 @@ function submitForm(e) {
             'X-CSRFToken': csrf_token
         },
         success: function (response) {
-            console.log(response);
+            $('.errorlist').empty();
+            for (error in response) {
+                $('[name="' + error + '"]').parent().find('.errorlist').html('<li>' + response[error] + '</li>');
+            };
         },
     });
 }
