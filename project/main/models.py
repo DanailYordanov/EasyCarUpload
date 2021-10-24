@@ -125,9 +125,10 @@ class Car(models.Model):
         choices=TRANSMISSION_TYPE_CHOICES, max_length=20)
     fuel_type = models.CharField(
         choices=FUEL_TYPE_CHOICES, max_length=10)
+    doors_type = models.CharField(choices=DOORS_TYPE_CHOICES, max_length=5)
     power = models.IntegerField()
     displacement = models.IntegerField()
-    year = models.IntegerField(choices=YEAR_CHOICES)
+    year = models.CharField(choices=YEAR_CHOICES, max_length=4)
     month = models.CharField(choices=MONTH_CHOICES, max_length=15)
     run = models.IntegerField()
     color = models.CharField(choices=COLOR_CHOICES, max_length=20)

@@ -1,8 +1,8 @@
-from .models import Model
-from .forms import CarModelForm, IMAGES_NUMBER
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Model, Image
+from .forms import CarModelForm, IMAGES_NUMBER
 
 
 def home(request):
@@ -11,11 +11,16 @@ def home(request):
 
 @login_required
 def create(request):
-    if request.method == 'POST':
+    if request.method == 'POST' and request.is_ajax():
         form = CarModelForm(request.POST, request.FILES)
+
         if form.is_valid():
-            form.intsance.user = request.user
-            form.save()
+            form.instance.user = request.user
+            instance = form.save()
+
+            for image in request.FILES.getlist('images'):
+                Image.objects.create(car=instance, image=image)
+
         else:
             return JsonResponse(form.errors)
     else:

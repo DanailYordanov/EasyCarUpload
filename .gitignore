@@ -1,4 +1,5 @@
 .env
+car_pics
 db.sqlite3
 __pycache__
 geckodriver.exe

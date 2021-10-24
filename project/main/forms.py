@@ -14,7 +14,7 @@ class CarModelForm(forms.ModelForm):
     class Meta:
         model = Car
         fields = ['category', 'brand', 'model', 'modification', 'engine_type', 'price',
-                  'transmission_type', 'fuel_type', 'power', 'displacement', 'year',
+                  'transmission_type', 'fuel_type', 'doors_type', 'power', 'displacement', 'year',
                   'month', 'run', 'color', 'euro_standart', 'description', 'images']
         widgets = {
             'description': forms.Textarea
