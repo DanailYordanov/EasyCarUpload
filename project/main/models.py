@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
 import django.utils.timezone as timezone
+from .scripts.cars_bg import CarsBgClass
 
 
 TRANSMISSION_TYPE_CHOICES = [
@@ -139,7 +140,39 @@ class Car(models.Model):
     def __str__(self):
         return f'{self.brand} {self.model} - {self.price}лв.'
 
+    def get_image_paths(self):
+        images = self.image_set.all()
+        image_paths = []
+
+        for image in images:
+            image_paths.append(image.image.path)
+
+        return image_paths
+
 
 class Image(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     image = models.ImageField(upload_to='car_pics')
+
+    def __str__(self):
+        return f'{self.car.brand} - {self.car.model} - {self.car.modification} - {self.car.price}'
+
+
+class OfferSite(models.Model):
+    name = models.CharField(max_length=50)
+    site_url = models.URLField(max_length=100)
+    offer_url = models.URLField(max_length=100)
+    delete_url = models.URLField(max_length=100)
+    create_url = models.URLField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+
+class Offer(models.Model):
+    offer_id = models.CharField(max_length=50)
+    site = models.ForeignKey(OfferSite, on_delete=models.SET_NULL, null=True)
+    car = models.ForeignKey(Car, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.car.brand} - {self.car.model} - {self.car.modification} - {self.car.price}'
